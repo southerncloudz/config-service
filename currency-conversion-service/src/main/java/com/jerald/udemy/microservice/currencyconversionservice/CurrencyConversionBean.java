@@ -11,6 +11,7 @@ public class CurrencyConversionBean {
 	private BigDecimal quantity;
 	private BigDecimal totalCalculatedAmount;
 	private int port;
+	private LimitsConfiguration currencyLimit;
 	
 	
 	public CurrencyConversionBean() {
@@ -18,7 +19,7 @@ public class CurrencyConversionBean {
 		// TODO Auto-generated constructor stub
 	}
 	public CurrencyConversionBean(Long id, String from, String to, BigDecimal conversionMultiple, BigDecimal quantity,
-			BigDecimal totalCalculatedAmount, int port) {
+			BigDecimal totalCalculatedAmount, int port, LimitsConfiguration currencyLimit) {
 		super();
 		this.id = id;
 		this.from = from;
@@ -27,6 +28,7 @@ public class CurrencyConversionBean {
 		this.quantity = quantity;
 		this.totalCalculatedAmount = totalCalculatedAmount;
 		this.port = port;
+		this.currencyLimit = currencyLimit;
 	}
 	public Long getId() {
 		return id;
@@ -69,6 +71,12 @@ public class CurrencyConversionBean {
 	}
 	public void setPort(int port) {
 		this.port = port;
+	}
+	public LimitsConfiguration getCurrencyLimit() {
+		return currencyLimit;
+	}
+	public void setCurrencyLimit(LimitsConfiguration currencyLimit) {
+		this.currencyLimit = currencyLimit;
 	}
 	
 	

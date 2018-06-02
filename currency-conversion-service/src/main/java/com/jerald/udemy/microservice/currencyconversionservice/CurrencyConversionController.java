@@ -19,6 +19,9 @@ public class CurrencyConversionController {
 	@Autowired
 	private CurrencyExchangeServiceProxy exchangeProxy;
 	
+	@Autowired
+	private LimitsServiceProxy limitsServiceProxy;
+	
 	private static Logger logger = LoggerFactory.getLogger(CurrencyConversionController.class);
 	
 	@GetMapping("currency-converter/from/{from}/to/{to}/quantity/{quantity}")
@@ -31,7 +34,7 @@ public class CurrencyConversionController {
 				CurrencyConversionBean.class, uriVariables );
 		CurrencyConversionBean response = currencyConversionBeanEntity.getBody();
 		return new CurrencyConversionBean(response.getId(), response.getFrom(), response.getTo(), response.getConversionMultiple(),
-				quantity, quantity.multiply(response.getConversionMultiple()),response.getPort());
+				quantity, quantity.multiply(response.getConversionMultiple()),response.getPort(), null);
 	}
 	
 	@GetMapping("currency-converter-feign/from/{from}/to/{to}/quantity/{quantity}")
@@ -39,7 +42,10 @@ public class CurrencyConversionController {
 		
 		CurrencyConversionBean response = exchangeProxy.retrieveExchangeValue(from, to);
 		logger.info("info {}", response);
+		
+		LimitsConfiguration currencyLimit = limitsServiceProxy.getCurrencyLimit();
+		
 		return new CurrencyConversionBean(response.getId(), response.getFrom(), response.getTo(), response.getConversionMultiple(),
-				quantity, quantity.multiply(response.getConversionMultiple()),response.getPort());
+				quantity, quantity.multiply(response.getConversionMultiple()),response.getPort(), currencyLimit);
 	}
 }
