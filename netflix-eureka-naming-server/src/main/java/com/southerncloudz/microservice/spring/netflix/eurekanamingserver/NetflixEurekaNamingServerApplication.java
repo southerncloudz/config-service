@@ -1,4 +1,4 @@
-package com.jerald.udemy.microservice.netflixeurekanamingserver;
+package com.southerncloudz.microservice.spring.netflix.eurekanamingserver;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

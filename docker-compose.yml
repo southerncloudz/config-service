@@ -1,0 +1,87 @@
+version: '3.3'
+services: 
+    netflix-eureka-naming-server:
+        image: 
+           southerncloudz/netflix-eureka-naming-server
+        ports: 
+           - "8761:8761"
+        networks:
+          - webnet
+    # visualizer:
+        # image: dockersamples/visualizer:stable
+        # ports:
+          # - "8080:8080"
+        # volumes:
+          # - "/var/run/docker.sock:/var/run/docker.sock"
+        # deploy:
+          # placement:
+              # constraints: [node.role == manager]
+        # networks:
+          # - webnet
+    netflix-zuul-api-gateway-server:
+        image: 
+           southerncloudz/netflix-zuul-api-gateway-server
+        ports: 
+           - "8765:8765"
+        depends_on:
+           - netflix-eureka-naming-server
+           - rabbitmq
+        environment:
+           RABBIT_HOST: rabbitmq
+        networks:
+          - webnet
+    currency-conversion-service:
+        image: 
+           southerncloudz/currency-conversion-service
+        ports: 
+           - "8100:8100"
+        depends_on:
+           - netflix-eureka-naming-server
+           - netflix-zuul-api-gateway-server
+           - rabbitmq
+        environment:
+           RABBIT_HOST: rabbitmq
+        networks:
+          - webnet
+    currency-exchange-service:
+        image: 
+           southerncloudz/currency-exchange-service
+        ports: 
+           - "8000:8000"
+        depends_on:
+           - netflix-eureka-naming-server
+           - netflix-zuul-api-gateway-server
+           - rabbitmq
+        environment:
+           RABBIT_HOST: rabbitmq
+        networks:
+          - webnet
+    spring-cloud-config-server:
+        image: 
+           southerncloudz/spring-cloud-config-server
+        ports: 
+           - "8888:8888"
+        networks:
+          - webnet
+    rabbitmq:
+        image: rabbitmq:3-management
+        ports:
+          - "4369:4369"
+          - "5671:5671"
+          - "5672:5672"
+          - "25672:25672"
+          - "15672:15672"
+        networks:
+          - webnet
+    zipkin:
+        image: openzipkin/zipkin
+        ports:
+          - "9411:9411"
+        depends_on:
+           - rabbitmq
+        environment:
+           RABBIT_URI: amqp://rabbitmq
+        networks:
+          - webnet
+networks:
+     webnet:
